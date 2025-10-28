@@ -1,62 +1,123 @@
-# Express.js RESTful API Assignment
+# Products RESTful API – Express.js
 
-This assignment focuses on building a RESTful API using Express.js, implementing proper routing, middleware, and error handling.
+## 🚀 Overview
 
-## Assignment Overview
+This project is a **backend RESTful API** built with **Express.js** for managing a product catalog.  
+It supports:
 
-You will:
-1. Set up an Express.js server
-2. Create RESTful API routes for a product resource
-3. Implement custom middleware for logging, authentication, and validation
-4. Add comprehensive error handling
-5. Develop advanced features like filtering, pagination, and search
+- CRUD operations (Create, Read, Update, Delete)  
+- Middleware for logging, authentication, and validation  
+- Error handling with custom error classes  
+- Advanced features: filtering, pagination, search, and product statistics  
 
-## Getting Started
+> This API is backend-only and returns JSON responses. You can test it using **Postman, Insomnia, or curl**.
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install dependencies:
-   ```
-   npm install
-   ```
-4. Run the server:
-   ```
-   npm start
-   ```
+---
 
-## Files Included
+## 🛠️ Setup Instructions
 
-- `Week2-Assignment.md`: Detailed assignment instructions
-- `server.js`: Starter Express.js server file
-- `.env.example`: Example environment variables file
+1. **Clone the repository**:
 
-## Requirements
+git clone
+cd express-js-server-side-framework-irenenderitu
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Postman, Insomnia, or curl for API testing
+Install dependencies:
 
-## API Endpoints
+npm install
 
-The API will have the following endpoints:
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+Create a .env file in the project root (copy from .env.example):
 
-## Submission
+PORT=3000
+API_KEY=12345
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+Start the server:
 
-## Resources
+npm run dev
 
-- [Express.js Documentation](https://expressjs.com/)
-- [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+
+Server runs at: http://localhost:3000/
+
+🔹 API Endpoints
+Method	Endpoint	Auth	Description
+GET	/	No	Root endpoint, returns a welcome message
+GET	/api/products	No	Get all products (supports category, search, page, limit query params)
+GET	/api/products/:id	No	Get a specific product by ID
+POST	/api/products	Yes	Create a new product (requires x-api-key)
+PUT	/api/products/:id	Yes	Update an existing product (requires x-api-key)
+DELETE	/api/products/:id	Yes	Delete a product (requires x-api-key)
+GET	/api/products/stats/all	No	Get product count grouped by category
+🔹 Example Requests
+1. Get all products
+curl http://localhost:3000/api/products
+
+2. Get a product by ID
+curl http://localhost:3000/api/products/<product_id>
+
+3. Create a product
+curl -X POST http://localhost:3000/api/products \
+-H "Content-Type: application/json" \
+-H "x-api-key: 12345" \
+-d '{
+  "name":"Phone",
+  "description":"Smartphone",
+  "price":899,
+  "category":"electronics",
+  "inStock":true
+}'
+
+4. Update a product
+curl -X PUT http://localhost:3000/api/products/<product_id> \
+-H "Content-Type: application/json" \
+-H "x-api-key: 12345" \
+-d '{"price":799,"inStock":false}'
+
+5. Delete a product
+curl -X DELETE http://localhost:3000/api/products/<product_id> \
+-H "x-api-key: 12345"
+
+6. Get product statistics
+curl http://localhost:3000/api/products/stats/all
+
+🔹 Authentication
+
+POST, PUT, DELETE requests require an API key in headers:
+
+x-api-key: 12345
+
+
+GET requests do not require authentication.
+
+⚠️ Notes
+
+Server runs on port 3000 by default (configurable via .env).
+
+All data is stored in memory (data/products.js) — server restart resets data.
+
+Designed as a backend API — no frontend UI is included.
+
+📂 Project Structure
+project-root/
+├── server.js
+├── package.json
+├── .env.example
+├── data/
+│   └── products.js
+├── middleware/
+│   ├── auth.js
+│   ├── errorHandler.js
+│   ├── logger.js
+│   └── validateProduct.js
+├── routes/
+│   └── products.js
+└── utils/
+    └── errors.js
+
+🔗 References
+
+Express.js Documentation
+
+RESTful API Design Best Practices
+
+HTTP Status Codes
